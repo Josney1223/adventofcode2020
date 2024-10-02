@@ -6,7 +6,7 @@ import (
 )
 
 func TestOpenFile(t *testing.T) {
-	_, err := OpenPasswordFile("data.txt")
+	_, err := OpenForestFile("data.txt")
 	if err != nil {
 		log.Fatalln(err)
 	}
