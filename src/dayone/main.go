@@ -1,6 +1,6 @@
 package dayone
 
-func SumTwoEqualTwoThousand(array []int) int {
+func SumTwoEqualTwoThousandTwenty(array []int) int {
 	chosenNumbers := []int{-1, -1, -1}
 
 	for i := 0; i < len(array); i++ {
@@ -18,7 +18,7 @@ func SumTwoEqualTwoThousand(array []int) int {
 	}
 }
 
-func SumThreeEqualTwoThousand(array []int) int {
+func SumThreeEqualTwoThousandTwenty(array []int) int {
 	chosenNumbers := []int{-1, -1, -1}
 
 	for i := 0; i < len(array); i++ {

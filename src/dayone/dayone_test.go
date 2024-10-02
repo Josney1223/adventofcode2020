@@ -35,7 +35,7 @@ func TestSumThreeEqualTwoThousand(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	result := SumThreeEqualTwoThousand(arraySlicesInt)
+	result := SumThreeEqualTwoThousandTwenty(arraySlicesInt)
 	log.Println("Resultado soma 3: ", result)
 }
 
@@ -66,6 +66,6 @@ func TestSumTwoEqualTwoThousand(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	result := SumTwoEqualTwoThousand(arraySlicesInt)
+	result := SumTwoEqualTwoThousandTwenty(arraySlicesInt)
 	log.Println("Resultado soma 2: ", result)
 }
