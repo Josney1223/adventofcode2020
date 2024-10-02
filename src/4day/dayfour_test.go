@@ -15,8 +15,8 @@ func TestOpenFile(t *testing.T) {
 	// }
 }
 
-func TestForestFileOne(t *testing.T) {
-	result, err := PassportFilesOne("data.txt")
+func TestPassport(t *testing.T) {
+	result, err := PassportFiles("data.txt")
 	if err != nil {
 		log.Fatalln(err)
 	}
