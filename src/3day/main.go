@@ -21,22 +21,18 @@ func TraverseForestFileTwo(path string) (int, error) {
 	}
 
 	slopes := [][]int{
-		[]int{1, 1},
-		[]int{3, 1},
-		[]int{5, 1},
-		[]int{7, 1},
-		[]int{1, 2},
+		{1, 1},
+		{3, 1},
+		{5, 1},
+		{7, 1},
+		{1, 2},
 	}
 
-	result := 0
+	result := 1
 
 	for _, val := range slopes {
 		localResult := TraverseForest(arraySlices, val[0], val[1])
-		if result != 0 {
-			result = result * localResult
-		} else {
-			result = localResult
-		}
+		result = result * localResult
 	}
 	return result, nil
 }
