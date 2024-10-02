@@ -98,7 +98,8 @@ func VerifyPasswordRuleOne(ruleMin int, ruleMax int, ruleRune []rune, password s
 // Notação BigO: Performance (1), Memoria (1)
 //
 // Dada uma senha, verifica se a senha segue a regra,
-// a regra é possuir entre ruleMin e ruleMax vezes a runa ruleRune
+// a regra é possuir na posição ruleMin ou na posição ruleMax a runa ruleRune
+// não pode existir nas duas e nem em nenhuma delas.
 func VerifyPasswordRuleTwo(ruleMin int, ruleMax int, ruleRune []rune, password string) bool {
 	passwordRunes := []rune(password)
 
