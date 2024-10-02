@@ -72,6 +72,10 @@ func OpenPasswordFile(path string) ([]string, error) {
 	return arraySlices, nil
 }
 
+// Notação BigO: Performance (n), Memoria (1)
+//
+// Dada uma senha, verifica se a senha segue a regra,
+// a regra é possuir entre ruleMin e ruleMax vezes a runa ruleRune
 func VerifyPasswordRuleOne(ruleMin int, ruleMax int, ruleRune []rune, password string) bool {
 	count := 0
 
@@ -91,6 +95,25 @@ func VerifyPasswordRuleOne(ruleMin int, ruleMax int, ruleRune []rune, password s
 	return true
 }
 
+// Notação BigO: Performance (1), Memoria (1)
+//
+// Dada uma senha, verifica se a senha segue a regra,
+// a regra é possuir entre ruleMin e ruleMax vezes a runa ruleRune
 func VerifyPasswordRuleTwo(ruleMin int, ruleMax int, ruleRune []rune, password string) bool {
-	return true
+	passwordRunes := []rune(password)
+
+	checkRuleMin := ruleMin < 0 || ruleMin > len(passwordRunes)
+	checkRuleMax := ruleMax < 0 || ruleMax > len(passwordRunes)
+	if checkRuleMin || checkRuleMax {
+		return false
+	}
+
+	existMin := passwordRunes[ruleMin-1] == ruleRune[0]
+	existMax := passwordRunes[ruleMax-1] == ruleRune[0]
+
+	if (existMin || existMax) && !(existMin && existMax) {
+		return true
+	} else {
+		return false
+	}
 }
