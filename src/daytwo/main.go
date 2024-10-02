@@ -37,11 +37,11 @@ func VerifyPasswordList(path string, ruleOne bool) int {
 		password := dados[2]
 
 		if ruleOne {
-			if VerifyPasswordRuleOne(ruleMin, ruleMax, ruleRune, password) {
+			if VerifyPasswordRuleOne(ruleMin, ruleMax, ruleRune[0], password) {
 				count++
 			}
 		} else {
-			if VerifyPasswordRuleTwo(ruleMin, ruleMax, ruleRune, password) {
+			if VerifyPasswordRuleTwo(ruleMin, ruleMax, ruleRune[0], password) {
 				count++
 			}
 		}
@@ -76,11 +76,11 @@ func OpenPasswordFile(path string) ([]string, error) {
 //
 // Dada uma senha, verifica se a senha segue a regra,
 // a regra é possuir entre ruleMin e ruleMax vezes a runa ruleRune
-func VerifyPasswordRuleOne(ruleMin int, ruleMax int, ruleRune []rune, password string) bool {
+func VerifyPasswordRuleOne(ruleMin int, ruleMax int, ruleRune rune, password string) bool {
 	count := 0
 
 	for _, char := range password {
-		if char == ruleRune[0] {
+		if char == ruleRune {
 			count++
 		}
 		if count > ruleMax {
@@ -100,7 +100,7 @@ func VerifyPasswordRuleOne(ruleMin int, ruleMax int, ruleRune []rune, password s
 // Dada uma senha, verifica se a senha segue a regra,
 // a regra é possuir na posição ruleMin ou na posição ruleMax a runa ruleRune
 // não pode existir nas duas e nem em nenhuma delas.
-func VerifyPasswordRuleTwo(ruleMin int, ruleMax int, ruleRune []rune, password string) bool {
+func VerifyPasswordRuleTwo(ruleMin int, ruleMax int, ruleRune rune, password string) bool {
 	passwordRunes := []rune(password)
 
 	checkRuleMin := ruleMin < 0 || ruleMin > len(passwordRunes)
@@ -109,8 +109,8 @@ func VerifyPasswordRuleTwo(ruleMin int, ruleMax int, ruleRune []rune, password s
 		return false
 	}
 
-	existMin := passwordRunes[ruleMin-1] == ruleRune[0]
-	existMax := passwordRunes[ruleMax-1] == ruleRune[0]
+	existMin := passwordRunes[ruleMin-1] == ruleRune
+	existMax := passwordRunes[ruleMax-1] == ruleRune
 
 	if (existMin || existMax) && !(existMin && existMax) {
 		return true
