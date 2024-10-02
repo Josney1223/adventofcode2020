@@ -6,7 +6,7 @@ import (
 )
 
 func TraverseForestFileOne(path string) (int, error) {
-	arraySlices, err := OpenPasswordFile("data.txt")
+	arraySlices, err := OpenForestFile("data.txt")
 	if err != nil {
 		return -1, err
 	}
@@ -15,7 +15,7 @@ func TraverseForestFileOne(path string) (int, error) {
 }
 
 func TraverseForestFileTwo(path string) (int, error) {
-	arraySlices, err := OpenPasswordFile("data.txt")
+	arraySlices, err := OpenForestFile("data.txt")
 	if err != nil {
 		return -1, err
 	}
@@ -37,7 +37,7 @@ func TraverseForestFileTwo(path string) (int, error) {
 	return result, nil
 }
 
-func OpenPasswordFile(path string) ([]string, error) {
+func OpenForestFile(path string) ([]string, error) {
 	file, err := os.Open("data.txt")
 	if err != nil {
 		return nil, err
