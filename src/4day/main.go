@@ -3,13 +3,12 @@ package dayfour
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"strings"
 )
 
-func PassportFiles(path string) (int, error) {
+func PassportFilesOne(path string) (int, error) {
 	arraySlices, err := OpenPassportsFile("data.txt")
 	if err != nil {
 		return -1, err
@@ -25,7 +24,26 @@ func PassportFiles(path string) (int, error) {
 		"pid",
 	}
 
-	return CheckPassports(arraySlices, requiredFields), nil
+	return CheckPassportsOne(arraySlices, requiredFields), nil
+}
+
+func PassportFilesTwo(path string) (int, error) {
+	arraySlices, err := OpenPassportsFile("data.txt")
+	if err != nil {
+		return -1, err
+	}
+
+	requiredFields := []string{
+		"byr",
+		"iyr",
+		"eyr",
+		"hgt",
+		"hcl",
+		"ecl",
+		"pid",
+	}
+
+	return CheckPassportsTwo(arraySlices, requiredFields), nil
 }
 
 func OpenPassportsFile(path string) ([]string, error) {
@@ -55,7 +73,51 @@ func OpenPassportsFile(path string) ([]string, error) {
 //
 // Dada uma lista com entradas, verificar se todos os campos necessários
 // estão em cada entrada.
-func CheckPassports(passportLines []string, necessary []string) int {
+func CheckPassportsOne(passportLines []string, necessary []string) int {
+	pointer := 0
+	countValidPassport := 0
+	validPassport := true
+	validPassportCheck := map[string]bool{}
+
+	for _, val := range necessary {
+		validPassportCheck[val] = false
+	}
+
+	for _, val := range passportLines {
+		if val == "" {
+			for i, val := range validPassportCheck {
+				if !val {
+					validPassport = false
+				}
+				validPassportCheck[i] = false
+			}
+			if validPassport {
+				countValidPassport++
+			}
+			validPassport = true
+			pointer++
+		} else {
+			line := strings.Split(val, " ")
+			for _, valString := range line {
+				pair := strings.Split(valString, ":")
+				for i := range validPassportCheck {
+					if i == pair[0] {
+						validPassportCheck[i] = true
+					}
+				}
+			}
+		}
+	}
+	return countValidPassport
+}
+
+// Notação BigO: Performance (n*m), Memoria (m).
+// Sendo n o número de passaportes e m o número de campos a
+// serem validados
+//
+// Dada uma lista com entradas, verificar se todos os campos necessários
+// estão em cada entrada.
+func CheckPassportsTwo(passportLines []string, necessary []string) int {
 	pointer := 0
 	countValidPassport := 0
 	validPassport := true

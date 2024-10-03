@@ -15,11 +15,19 @@ func TestOpenFile(t *testing.T) {
 	// }
 }
 
-func TestPassport(t *testing.T) {
-	result, err := PassportFiles("data.txt")
+func TestPassportOne(t *testing.T) {
+	result, err := PassportFilesOne("data.txt")
 	if err != nil {
 		log.Fatalln(err)
 	}
 
+	log.Print(result)
+}
+
+func TestPassportTwo(t *testing.T) {
+	result, err := PassportFilesTwo("data.txt")
+	if err != nil {
+		log.Fatalln(err)
+	}
 	log.Print(result)
 }
