@@ -44,6 +44,9 @@ func OpenSeatsFile(path string) ([]string, error) {
 	return arraySlices, nil
 }
 
+// Notação BigO: Performance (1), Memoria (1)
+//
+// Verifica se qual a linha e coluna e o ID do assento
 func BinarySearchSeatsOne(seatCode string) (int, int, int) {
 	upperRow := 127
 	lowerRow := 0
