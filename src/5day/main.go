@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"log"
 	"os"
+	"slices"
 )
 
 func GetBiggestSeatID(path string) (int, error) {
@@ -14,13 +15,38 @@ func GetBiggestSeatID(path string) (int, error) {
 
 	biggestID := 0
 	for _, val := range arraySlices {
-		row, col, id := BinarySearchSeatsOne(val)
-		log.Println(row, col, id, val)
+		_, _, id := BinarySearchSeats(val)
 		if id > biggestID {
 			biggestID = id
 		}
 	}
 	return biggestID, nil
+}
+
+func GetMissingSeat(path string) (int, error) {
+	arraySlices, err := OpenSeatsFile(path)
+	if err != nil {
+		return -1, err
+	}
+
+	seats := []int{}
+
+	for _, val := range arraySlices {
+		_, _, id := BinarySearchSeats(val)
+		seats = append(seats, id)
+	}
+	slices.Sort(seats)
+
+	missingSeat := -1
+	for i := range seats {
+		log.Println(seats[i+1], seats[i])
+		if seats[i+1]-seats[i] != 1 {
+			missingSeat = seats[i] + 1
+			break
+		}
+	}
+
+	return missingSeat, nil
 }
 
 func OpenSeatsFile(path string) ([]string, error) {
@@ -47,7 +73,7 @@ func OpenSeatsFile(path string) ([]string, error) {
 // Notação BigO: Performance (1), Memoria (1)
 //
 // Verifica se qual a linha e coluna e o ID do assento
-func BinarySearchSeatsOne(seatCode string) (int, int, int) {
+func BinarySearchSeats(seatCode string) (int, int, int) {
 	upperRow := 127
 	lowerRow := 0
 	upperCol := 7
@@ -70,15 +96,41 @@ func BinarySearchSeatsOne(seatCode string) (int, int, int) {
 			upperRow = (lowerRow + upperRow) / 2
 			row = upperRow
 		case runeB:
-			lowerRow = (lowerRow + upperRow) / 2
+			lowerRow = (lowerRow+upperRow)/2 + 1
 			row = lowerRow
 		case runeR:
-			lowerCol = (lowerCol + upperCol) / 2
+			lowerCol = (lowerCol+upperCol)/2 + 1
 			col = lowerCol
 		case runeL:
 			upperCol = (lowerCol + upperCol) / 2
 			col = upperCol
 		}
 	}
-	return row, col, row*8 + col
+
+	id := (int(row) * 8) + int(col)
+	//log.Println(seatCode, row, col, id)
+	return int(row), int(col), int(id)
+}
+
+// Binary Search
+func findIndex(arrayId []int, newId int) int {
+	upper := len(arrayId) - 1
+	lower := 0
+	index := 0
+
+	for lower <= upper {
+		index = (lower + upper) / 2
+
+		if newId == arrayId[index] {
+			return index
+		}
+
+		if newId > arrayId[index] {
+			lower = index + 1
+		} else {
+			upper = index - 1
+		}
+		//log.Println(lower, upper, index)
+	}
+	return index
 }
