@@ -93,129 +93,131 @@ func CheckPassports(passportLines []string, necessary []string) int {
 	return countValidPassport
 }
 
+// Notação BigO: Performance (1), Memoria (1).
+//
+// Dado um campo do passaporte, validar o campo.
 func ValidadeField(field string, data string) bool {
+	returnValue := true
 	switch field {
 	case "byr":
 		birthDate, err := strconv.Atoi(data)
 		if err != nil {
-			return false
+			returnValue = false
 		}
-		if birthDate <= 2002 && birthDate >= 1920 {
-			return true
+		if birthDate > 2002 || birthDate < 1920 {
+			returnValue = false
 		}
-		return false
 
 	case "iyr":
 		issueDate, err := strconv.Atoi(data)
 		if err != nil {
-			return false
+			returnValue = false
 		}
-		if issueDate <= 2010 && issueDate >= 2020 {
-			return true
+		if issueDate < 2010 || issueDate > 2020 {
+			returnValue = false
 		}
-		return false
 
 	case "eyr":
 		issueDate, err := strconv.Atoi(data)
 		if err != nil {
-			return false
+			returnValue = false
 		}
-		if issueDate <= 2030 && issueDate >= 2020 {
-			return true
+		if issueDate > 2030 || issueDate < 2020 {
+			returnValue = false
 		}
-		return false
 
 	case "hgt":
 		runeData := []rune(data)
-		runeRange := []rune("1234567890cmin")
+		runeRange := []rune("cmin")
 		if len(runeData) != 5 && len(runeData) != 4 {
-			return false
-		}
+			returnValue = false
+		} else {
+			checkCm := false
+			checkIn := false
+			if len(runeData) == 5 {
+				checkCm = runeData[3] == runeRange[0] && runeData[4] == runeRange[1]
+			} else {
+				checkIn = runeData[2] == runeRange[2] && runeData[3] == runeRange[3]
+			}
 
-		checkCm := runeData[3] == runeRange[10] && runeData[4] == runeRange[11]
-		checkIn := runeData[2] == runeRange[12] && runeData[3] == runeRange[13]
+			if checkCm {
+				stringM := fmt.Sprintf("%c%c%c",
+					runeData[0],
+					runeData[1],
+					runeData[2])
 
-		for _, valData := range runeData {
-			found := false
-			count := 0
-			for count < 11 {
-				if runeRange[count] == valData {
-					found = true
-					break
+				number, err := strconv.Atoi(stringM)
+				if err != nil {
+					returnValue = false
 				}
-				count++
-			}
-			if !found {
-				return false
-			}
-		}
 
-		if checkCm {
-			stringM := fmt.Sprintf("%c%c%c",
-				runeData[0],
-				runeData[1],
-				runeData[2])
+				if number < 150 || number > 193 {
+					returnValue = false
+				}
 
-			number, err := strconv.Atoi(stringM)
-			if err != nil {
-				return false
-			}
+			} else if checkIn {
+				stringM := fmt.Sprintf("%c%c",
+					runeData[0],
+					runeData[1])
+				number, err := strconv.Atoi(stringM)
+				if err != nil {
+					returnValue = false
+				}
 
-			if number < 150 || number > 193 {
-				return false
+				if number < 59 || number > 76 {
+					returnValue = false
+				}
+			} else {
+				returnValue = false
 			}
-			return true
-
-		} else if checkIn {
-			stringM := fmt.Sprintf("%c%c",
-				runeData[0],
-				runeData[1])
-			number, err := strconv.Atoi(stringM)
-			if err != nil {
-				return false
-			}
-
-			if number < 59 || number > 76 {
-				return false
-			}
-			return true
 		}
 
 	case "hcl":
-		colorRange := []rune("1234567890abcdef")
-		if len(data) == 7 {
-			runeData := []rune(data)
-			if runeData[0] == []rune("#")[0] {
-				for _, val := range runeData {
-					check := false
-					for _, r := range colorRange {
-						if val == r {
-							check = true
-						}
-					}
-					if !check {
-						return false
-					}
+		colorRange := []rune("#1234567890abcdef")
+		if len(data) != 7 {
+			returnValue = false
+			break
+		}
+		runeData := []rune(data)
+		if runeData[0] != []rune("#")[0] {
+			returnValue = false
+			break
+		}
+		for _, val := range runeData {
+			check := false
+			for _, r := range colorRange {
+				if val == r {
+					check = true
+					break
 				}
-				return true
+			}
+			if !check {
+				returnValue = false
 			}
 		}
-		return false
 
 	case "ecl":
 		eyeColor := []string{"amb", "blu", "brn", "gry", "grn", "hzl", "oth"}
+		found := false
 		for _, val := range eyeColor {
 			if val == data {
-				return true
+				found = true
 			}
 		}
-		return false
+
+		if !found {
+			returnValue = false
+		}
 
 	case "pid":
-		if len(data) == 9 {
-			return true
+		if len(data) != 9 {
+			returnValue = false
+			break
 		}
-		return false
+		_, err := strconv.Atoi(data)
+		if err != nil {
+			returnValue = false
+		}
 	}
-	return false
+	return returnValue
 }
