@@ -29,3 +29,11 @@ func TestGetShinyBagsOne(t *testing.T) {
 	}
 	log.Print(result)
 }
+
+func TestGetShinyBagsTwo(t *testing.T) {
+	result, err := GetShinyBagsTwo("data.txt")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	log.Print(result)
+}

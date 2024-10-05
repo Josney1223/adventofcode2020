@@ -17,6 +17,21 @@ func GetShinyBagsOne(path string) (int, error) {
 	return result, nil
 }
 
+func GetShinyBagsTwo(path string) (int, error) {
+	rules, err := OpenRulesFile(path)
+	if err != nil {
+		return -1, err
+	}
+	result := CalculateShinyBags(rules)
+	return result, nil
+}
+
+// Notação BigO: Performance (k+m*p), Memoria (n*l)
+// k o tamanho da string de regras.
+// m o número de palavras na regra.
+// p a complexidade do regex.
+// n o tamanho final da []string.
+// l a média de tamanho das strings em []string.
 func DecodeRules(rule string) (string, []string) {
 	ruleDecoded := strings.Split(rule, " ")
 	bag := ""
@@ -44,6 +59,10 @@ func DecodeRules(rule string) (string, []string) {
 	return bag, bags
 }
 
+// Notação BigO: Performance (n*(k+m*p) + V*(V*E)), Memoria (n)
+// n o número de regras recebidas
+// (k+m*p) vem de DecodeRules
+// V*(V*E) vem de CheckGoldenBag
 func CalculateShinyBags(rules []string) int {
 	shinyBags := 0
 	rulesMap := map[string][]string{}
@@ -60,14 +79,23 @@ func CalculateShinyBags(rules []string) int {
 	return shinyBags
 }
 
+// Notação BigO: Performance (V*E), Memoria (V)
+// Sendo V o número de mochilas únicas
+// e E o número de relacionamentos diretos.
+//
+// Verifica se uma mochila bag pode conter dentro
+// dela uma mochila tipo shinygold
+//
+// Dá pra melhorar com caching das variaveis já visitadas
 func CheckGoldenBag(rulesMap map[string][]string, bag string) int {
 	recursiveReturn := 0
+	_, ok := rulesMap["shinygold"]
+	if ok {
+		return 1
+	}
+
 	for _, val := range rulesMap[bag] {
-		if val == "shinygold" {
-			recursiveReturn = 1
-		} else {
-			recursiveReturn = CheckGoldenBag(rulesMap, val)
-		}
+		recursiveReturn = CheckGoldenBag(rulesMap, val)
 		if recursiveReturn != 0 {
 			return 1
 		}
