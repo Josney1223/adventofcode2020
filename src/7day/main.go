@@ -55,20 +55,21 @@ func CalculateShinyBags(rules []string) int {
 
 	for bag := range rulesMap {
 		shinyBags = shinyBags + CheckGoldenBag(rulesMap, bag)
-		log.Println(bag, shinyBags)
 	}
 
 	return shinyBags
 }
 
 func CheckGoldenBag(rulesMap map[string][]string, bag string) int {
+	recursiveReturn := 0
 	for _, val := range rulesMap[bag] {
 		if val == "shinygold" {
-			log.Println(bag, val, 1)
-			return 1
+			recursiveReturn = 1
 		} else {
-			log.Println(bag, val, 0)
-			return CheckGoldenBag(rulesMap, val)
+			recursiveReturn = CheckGoldenBag(rulesMap, val)
+		}
+		if recursiveReturn != 0 {
+			return 1
 		}
 	}
 	return 0
