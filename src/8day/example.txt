@@ -6,4 +6,4 @@ jmp -3
 acc -99
 acc +1
 jmp -4
-acc +
+acc +6
