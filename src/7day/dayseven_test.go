@@ -16,6 +16,28 @@ func TestExampleOne(t *testing.T) {
 	log.Print(result)
 }
 
+func TestExampleTwo(t *testing.T) {
+	result, err := GetShinyBagsTwo("example.txt")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	if result != 32 {
+		log.Fatalln("Resultado errado, esperado 32, recebido", result)
+	}
+	log.Print(result)
+}
+
+func TestExampleThree(t *testing.T) {
+	result, err := GetShinyBagsTwo("example2.txt")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	if result != 126 {
+		log.Fatalln("Resultado errado, esperado 126, recebido", result)
+	}
+	log.Print(result)
+}
+
 func TestDecodeRule(t *testing.T) {
 	rule := "light red bags contain 1 bright white bag, 2 muted yellow bags."
 	bag, bags := DecodeRules(rule)

@@ -5,8 +5,14 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 )
+
+type Bag struct {
+	qtd        int
+	bagsInside map[string]int
+}
 
 func GetShinyBagsOne(path string) (int, error) {
 	rules, err := OpenRulesFile(path)
@@ -22,7 +28,7 @@ func GetShinyBagsTwo(path string) (int, error) {
 	if err != nil {
 		return -1, err
 	}
-	result := CalculateShinyBags(rules)
+	result := CalculateBagsInShinyBag(rules)
 	return result, nil
 }
 
@@ -32,12 +38,14 @@ func GetShinyBagsTwo(path string) (int, error) {
 // p a complexidade do regex.
 // n o tamanho final da []string.
 // l a média de tamanho das strings em []string.
-func DecodeRules(rule string) (string, []string) {
+func DecodeRules(rule string) (string, map[string]int) {
 	ruleDecoded := strings.Split(rule, " ")
 	bag := ""
-	bags := []string{}
+	bagsInside := map[string]int{}
 	newString := ""
-	reg := "((contain)|(bag)|[1-9])(s)?(,)?(\\.)?"
+	reg := "((contain)|(bag))(s)?(,)?(\\.)?"
+	regNumber := "(\\d|(no)|(other))"
+	num := 0
 
 	for _, val := range ruleDecoded {
 		match, err := regexp.MatchString(reg, val)
@@ -45,18 +53,62 @@ func DecodeRules(rule string) (string, []string) {
 			log.Panicln("Erro ao realizar Regex", err)
 		}
 
-		if match {
+		matchNum, err := regexp.MatchString(regNumber, val)
+		if err != nil {
+			log.Panicln("Erro ao realizar Regex", err)
+		}
+
+		if matchNum {
+			if val == "no" || val == "other" {
+				num = 1
+			} else {
+				num, err = strconv.Atoi(val)
+				if err != nil {
+					log.Panicln("Erro ao realizar Regex", err)
+				}
+			}
+		} else if match {
 			if bag == "" {
 				bag = bag + newString
 			} else if newString != "" {
-				bags = append(bags, newString)
+				bagsInside[newString] = num
 			}
+			num = 0
 			newString = ""
-		} else {
+		} else if !matchNum {
 			newString = newString + val
 		}
 	}
-	return bag, bags
+	return bag, bagsInside
+}
+
+// Notação BigO: Performance (n*(k+m*p) + V*(V*E)), Memoria (n)
+// n o número de regras recebidas
+// (k+m*p) vem de DecodeRules
+// V*(V*E) vem de CheckGoldenBag
+func CalculateBagsInShinyBag(rules []string) int {
+	rulesMap := map[string]map[string]int{}
+
+	for _, val := range rules {
+		ruleName, rules := DecodeRules(val)
+		rulesMap[ruleName] = rules
+	}
+
+	return CalculateBagsInBag(rulesMap, "shinygold")
+}
+
+func CalculateBagsInBag(rulesMap map[string]map[string]int, bag string) int {
+	num := 0
+	if len(rulesMap[bag]) == 0 {
+		return 0
+	}
+
+	for val := range rulesMap[bag] {
+		recursive := CalculateBagsInBag(rulesMap, val)
+		num = num + (rulesMap[bag][val] * recursive) + rulesMap[bag][val]
+	}
+
+	return num
 }
 
 // Notação BigO: Performance (n*(k+m*p) + V*(V*E)), Memoria (n)
@@ -65,7 +117,7 @@ func DecodeRules(rule string) (string, []string) {
 // V*(V*E) vem de CheckGoldenBag
 func CalculateShinyBags(rules []string) int {
 	shinyBags := 0
-	rulesMap := map[string][]string{}
+	rulesMap := map[string]map[string]int{}
 
 	for _, val := range rules {
 		ruleName, rules := DecodeRules(val)
@@ -87,14 +139,14 @@ func CalculateShinyBags(rules []string) int {
 // dela uma mochila tipo shinygold
 //
 // Dá pra melhorar com caching das variaveis já visitadas
-func CheckGoldenBag(rulesMap map[string][]string, bag string) int {
+func CheckGoldenBag(rulesMap map[string]map[string]int, bag string) int {
 	recursiveReturn := 0
-	_, ok := rulesMap["shinygold"]
+	_, ok := rulesMap[bag]["shinygold"]
 	if ok {
 		return 1
 	}
 
-	for _, val := range rulesMap[bag] {
+	for val := range rulesMap[bag] {
 		recursiveReturn = CheckGoldenBag(rulesMap, val)
 		if recursiveReturn != 0 {
 			return 1
