@@ -3,6 +3,8 @@ package dayten
 import (
 	"log"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestExampleOnePartTwo(t *testing.T) {
@@ -10,10 +12,7 @@ func TestExampleOnePartTwo(t *testing.T) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	if result != 8 {
-		log.Fatalln("Resultado errado, esperado 8, recebido", result)
-	}
-	log.Print(result)
+	assert.Equal(t, 8, result)
 }
 
 func TestExampleTwoPartTwo(t *testing.T) {
@@ -21,10 +20,7 @@ func TestExampleTwoPartTwo(t *testing.T) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	if result != 19208 {
-		log.Fatalln("Resultado errado, esperado 19208, recebido", result)
-	}
-	log.Print(result)
+	assert.Equal(t, 19208, result)
 }
 
 func TestExampleOne(t *testing.T) {
@@ -32,10 +28,7 @@ func TestExampleOne(t *testing.T) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	if result != 35 {
-		log.Fatalln("Resultado errado, esperado 35, recebido", result)
-	}
-	log.Print(result)
+	assert.Equal(t, 35, result)
 }
 
 func TestExampleTwo(t *testing.T) {
@@ -43,10 +36,7 @@ func TestExampleTwo(t *testing.T) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	if result != 220 {
-		log.Fatalln("Resultado errado, esperado 220, recebido", result)
-	}
-	log.Print(result)
+	assert.Equal(t, 220, result)
 }
 
 func TestJoltsFile(t *testing.T) {

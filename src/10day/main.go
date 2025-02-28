@@ -39,7 +39,7 @@ func CalculateCombinationsJolts(path string) (int, error) {
 		if steps[i] == 1 {
 			count++
 		} else if steps[i] == 3 {
-			log.Println(combinations, count)
+			//log.Println(combinations, count)
 			if count != 0 {
 				combinations = combinations * (2 * count)
 			}
@@ -47,8 +47,8 @@ func CalculateCombinationsJolts(path string) (int, error) {
 		}
 	}
 
-	log.Println(steps)
-	log.Println(combinations)
+	//log.Println(steps)
+	//log.Println(combinations)
 
 	return combinations, nil
 }
